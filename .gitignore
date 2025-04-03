@@ -1,0 +1,35 @@
+# Node modules
+node_modules/
+
+# TypeScript
+dist/
+*.tsbuildinfo
+
+# Sequelize
+# Ignorar banco de dados local, se estiver usando SQLite
+*.sqlite
+
+# Logs
+*.log
+
+# Dependências locais de banco de dados, se houver
+*.env
+*.env.local
+*.env.*.local
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# NPM package-lock e Yarn lock files
+package-lock.json
+yarn.lock
+
+# IDEs (ex: VSCode)
+.vscode/
+
+# Testes de cobertura (se você usar alguma ferramenta de testes como Jest)
+coverage/
+
+# Arquivos de build do TypeScript (caso a pasta dist seja gerada pelo TypeScript)
+build/
