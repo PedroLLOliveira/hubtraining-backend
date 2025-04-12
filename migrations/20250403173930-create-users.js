@@ -4,10 +4,10 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Users', {
       id: {
-        type: Sequelize.UUID,
-        allowNull: false,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        defaultValue: Sequelize.fn('uuid_generate_v4')
+        autoIncrement: true,
+        allowNull: false,
       },
       name: {
         type: Sequelize.STRING,
@@ -18,9 +18,28 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      email_verified: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       password_hash: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      user_type: {
+        type: Sequelize.ENUM('personal', 'student_with_personal', 'student'),
+        allowNull: false,
+      },
+      personal_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       phone_number: {
         type: Sequelize.STRING,
@@ -34,9 +53,9 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: true,
       },
-      role: {
-        type: Sequelize.ENUM('personal', 'student'),
-        allowNull: false,
+      gender: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -48,10 +67,19 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.fn('NOW'),
       },
+      status: {
+        type: Sequelize.ENUM('ativo', 'inativo'),
+        allowNull: false,
+        defaultValue: 'ativo',
+      },
+      last_login_at: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
     });
   },
 
-  async down(queryInterface) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
   }
 };
