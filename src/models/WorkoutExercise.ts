@@ -1,64 +1,43 @@
 import {
-  Table,
-  Column,
-  Model,
-  DataType,
-  AllowNull,
-  ForeignKey,
-  Default,
+  Table, Column, Model, DataType,
+  CreatedAt, UpdatedAt, ForeignKey,
+  BelongsTo, PrimaryKey
 } from 'sequelize-typescript';
 import { Workout } from './Workout';
+import { Exercise } from './Exercise';
 
 @Table({
   tableName: 'WorkoutExercises',
   createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  updatedAt: 'updated_at'
 })
 export class WorkoutExercise extends Model<WorkoutExercise> {
   @ForeignKey(() => Workout)
-  @AllowNull(false)
-  @Column({ type: DataType.INTEGER })
+  @Column({ type: DataType.INTEGER, allowNull: false })
   workout_id!: number;
 
-  @AllowNull(false)
-  @Column({ type: DataType.STRING })
-  exercise_name!: string;
+  @BelongsTo(() => Workout)
+  workout!: Workout;
 
-  @AllowNull(false)
-  @Column({ type: DataType.STRING })
-  exercise_type!: string; // Exemplos: 'aeróbico', 'força', 'alongamento', etc.
+  @ForeignKey(() => Exercise)
+  @Column({ type: DataType.STRING, allowNull: false })
+  exercise_id!: string;
 
-  @AllowNull(true)
-  @Column({ type: DataType.TEXT })
-  description?: string;
+  @BelongsTo(() => Exercise)
+  exercise!: Exercise;
 
-  @AllowNull(false)
-  @Column({ type: DataType.INTEGER })
-  sets!: number; // Número de séries
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  sets!: number;
 
-  @AllowNull(false)
-  @Column({ type: DataType.INTEGER })
-  reps!: number; // Número de repetições por série
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  reps!: number;
 
-  @AllowNull(false)
-  @Column({ type: DataType.INTEGER })
-  rest_time!: number; // Tempo de descanso entre séries (em segundos)
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  rest_time!: number;
 
-  @AllowNull(true)
-  @Column({ type: DataType.STRING })
-  media_url?: string; // URL do vídeo ou imagem demonstrativa do exercício
+  @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 1 })
+  order!: number;
 
-  @AllowNull(false)
-  @Column({ type: DataType.ENUM('video', 'image') })
-  media_type!: 'video' | 'image';
-
-  @AllowNull(false)
-  @Default(DataType.NOW)
-  @Column({ type: DataType.DATE })
-  created_at!: Date;
-
-  @AllowNull(false)
-  @Default(DataType.NOW)
-  @Column({ type: DataType.DATE })
-  updated_at!: Date;
+  @CreatedAt created_at!: Date;
+  @UpdatedAt updated_at!: Date;
 }

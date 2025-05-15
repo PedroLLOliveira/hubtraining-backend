@@ -1,60 +1,56 @@
 import {
-  Table,
-  Column,
-  Model,
-  DataType,
-  AllowNull,
-  Default,
-  ForeignKey,
+  Table, Column, Model, DataType,
+  CreatedAt, UpdatedAt, PrimaryKey,
+  ForeignKey, BelongsTo, HasMany
 } from 'sequelize-typescript';
-import { User } from './User';
+import { User } from './User';  // supondo existir
+import { WorkoutExercise } from './WorkoutExercise';
 
 @Table({
   tableName: 'Workouts',
   createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  updatedAt: 'updated_at'
 })
 export class Workout extends Model<Workout> {
-  // Campo que referencia o usuário que criou o treino
   @ForeignKey(() => User)
-  @AllowNull(false)
-  @Column({ type: DataType.INTEGER })
+  @Column({ type: DataType.INTEGER, allowNull: false })
   creator_id!: number;
 
-  // Campo opcional que referencia o aluno para quem o treino foi criado
-  @ForeignKey(() => User)
-  @AllowNull(true)
-  @Column({ type: DataType.INTEGER })
-  student_id?: number;
+  @BelongsTo(() => User, 'creator_id')
+  creator!: User;
 
-  @AllowNull(false)
-  @Column({ type: DataType.STRING })
+  @ForeignKey(() => User)
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  student_id!: number | null;
+
+  @BelongsTo(() => User, 'student_id')
+  student!: User | null;
+
+  @Column({ type: DataType.STRING, allowNull: false })
   name!: string;
 
-  @AllowNull(true)
-  @Column({ type: DataType.TEXT })
-  description?: string;
+  @Column({ type: DataType.TEXT, allowNull: true })
+  description!: string;
 
-  @AllowNull(false)
-  @Default('private')
-  @Column({ type: DataType.ENUM('private', 'public') })
+  @Column({
+    type: DataType.ENUM('private','public'),
+    allowNull: false,
+    defaultValue: 'private'
+  })
   visibility!: 'private' | 'public';
 
-  @AllowNull(false)
-  @Column({ type: DataType.INTEGER })
-  duration!: number; // Duração do treino em minutos
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  duration!: number;
 
-  @AllowNull(false)
-  @Column({ type: DataType.ENUM('easy', 'medium', 'hard') })
+  @Column({
+    type: DataType.ENUM('easy','medium','hard'),
+    allowNull: false
+  })
   difficulty_level!: 'easy' | 'medium' | 'hard';
 
-  @AllowNull(false)
-  @Default(DataType.NOW)
-  @Column({ type: DataType.DATE })
-  created_at!: Date;
+  @HasMany(() => WorkoutExercise)
+  exercises!: WorkoutExercise[];
 
-  @AllowNull(false)
-  @Default(DataType.NOW)
-  @Column({ type: DataType.DATE })
-  updated_at!: Date;
+  @CreatedAt created_at!: Date;
+  @UpdatedAt updated_at!: Date;
 }

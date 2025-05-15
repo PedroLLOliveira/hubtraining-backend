@@ -12,7 +12,7 @@ import { User } from './User';
 
 @Table({
   tableName: 'WorkoutLikes',
-  timestamps: false, // Desabilita a criação automática de updated_at
+  timestamps: false,
 })
 export class WorkoutLike extends Model<WorkoutLike> {
   @ForeignKey(() => Workout)
@@ -22,7 +22,7 @@ export class WorkoutLike extends Model<WorkoutLike> {
 
   @ForeignKey(() => User)
   @AllowNull(false)
-  @Column({ type: DataType.INTEGER }) // Alterado para INTEGER conforme a migration
+  @Column({ type: DataType.INTEGER })
   user_id!: number;
 
   @AllowNull(false)

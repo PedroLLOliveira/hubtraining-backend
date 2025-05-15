@@ -5,9 +5,9 @@ module.exports = {
     await queryInterface.createTable('WorkoutExercises', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
+        allowNull: false,
       },
       workout_id: {
         type: Sequelize.INTEGER,
@@ -19,17 +19,15 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      exercise_name: {
+      exercise_id: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      exercise_type: {
-        type: Sequelize.STRING,
-        allowNull: false, // Exemplo: 'aeróbico', 'força', 'alongamento', etc.
-      },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: true,
+        references: {
+          model: 'Exercises',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       sets: {
         type: Sequelize.INTEGER,
@@ -41,15 +39,12 @@ module.exports = {
       },
       rest_time: {
         type: Sequelize.INTEGER,
-        allowNull: false, // Tempo de descanso entre séries em segundos
-      },
-      media_url: {
-        type: Sequelize.STRING,
-        allowNull: true, // URL do vídeo ou imagem demonstrativa do exercício
-      },
-      media_type: {
-        type: Sequelize.ENUM('video', 'image'),
         allowNull: false,
+      },
+      order: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
       },
       created_at: {
         type: Sequelize.DATE,

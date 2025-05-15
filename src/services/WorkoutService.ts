@@ -1,61 +1,38 @@
+// services/workout.service.ts
 import { Workout } from '../models/Workout';
+import { WorkoutExercise } from '../models/WorkoutExercise';
 
 export class WorkoutService {
-  /**
-   * Cria uma nova ficha de treino.
-   * @param workoutData Dados da ficha de treino.
-   * @returns Retorna a ficha de treino criada.
-   */
-  static async createWorkout(workoutData: any) {
-    const workout = await Workout.create(workoutData);
-    return workout;
+  async findAll(): Promise<Workout[]> {
+    return Workout.findAll({ include: [WorkoutExercise] });
   }
 
-  /**
-   * Encontra todas as fichas de treino.
-   * @returns Retorna uma lista de fichas de treino.
-   */
-  static async findAllWorkouts() {
-    const workouts = await Workout.findAll();
-    return workouts;
+  async findById(id: number): Promise<Workout | null> {
+    return Workout.findByPk(id, { include: [WorkoutExercise] });
   }
 
-  /**
-   * Encontra uma ficha de treino pelo ID.
-   * @param id ID da ficha de treino.
-   * @returns Retorna a ficha de treino encontrada.
-   */
-  static async findWorkoutById(id: number) {
-    const workout = await Workout.findByPk(id);
-    return workout;
+  async create(data: Partial<Workout>): Promise<Workout> {
+    return Workout.create(data as any);
   }
 
-  /**
-   * Atualiza uma ficha de treino.
-   * @param id ID da ficha de treino.
-   * @param workoutData Dados para atualizar a ficha.
-   * @returns Retorna a ficha de treino atualizada.
-   */
-  static async updateWorkout(id: number, workoutData: any) {
-    const workout = await Workout.findByPk(id);
-    if (workout) {
-      await workout.update(workoutData);
-      return workout;
-    }
-    return null;
+  async update(id: number, data: Partial<Workout>): Promise<[number]> {
+    return Workout.update(data, { where: { id } });
   }
 
-  /**
-   * Deleta uma ficha de treino.
-   * @param id ID da ficha de treino.
-   * @returns Retorna um booleano indicando sucesso.
-   */
-  static async deleteWorkout(id: number) {
-    const workout = await Workout.findByPk(id);
-    if (workout) {
-      await workout.destroy();
-      return true;
-    }
-    return false;
+  async delete(id: number): Promise<number> {
+    return Workout.destroy({ where: { id } });
+  }
+
+  // Para gerenciar exercícios do workout:
+  async addExercise(workoutId: number, payload: Partial<WorkoutExercise>) {
+    return WorkoutExercise.create({ workout_id: workoutId, ...payload } as any);
+  }
+
+  async updateExercise(weId: number, data: Partial<WorkoutExercise>) {
+    return WorkoutExercise.update(data, { where: { id: weId } });
+  }
+
+  async removeExercise(weId: number) {
+    return WorkoutExercise.destroy({ where: { id: weId } });
   }
 }
